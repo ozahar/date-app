@@ -1,0 +1,179 @@
+  ズームレベルは周辺の道路がよく見える「16」で固定し、地図がカードの枠（border-radius）からはみ出さないようCSSを調整してください。<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全国アウトスポット検索</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">🌟 全国アウトスポット検索</h1>
+            <p class="subtitle">条件に合わせて最適なアウトスポットを見つけよう</p>
+        </header>
+
+        <main class="main">
+            <!-- Japan Map Section -->
+            <section class="map-section">
+                <h2 class="map-section-title">🗺️ 日本地図から探す</h2>
+                
+                <!-- Region Buttons -->
+                <div class="region-buttons" id="regionButtons">
+                    <button class="region-btn" data-region="hokkaido">北海道</button>
+                    <button class="region-btn" data-region="tohoku">東北</button>
+                    <button class="region-btn" data-region="kanto">関東</button>
+                    <button class="region-btn" data-region="chubu">中部</button>
+                    <button class="region-btn" data-region="kinki">近畿</button>
+                    <button class="region-btn" data-region="chugoku">中国</button>
+                    <button class="region-btn" data-region="shikoku">四国</button>
+                    <button class="region-btn" data-region="kyushu">九州</button>
+                </div>
+
+                <!-- Prefecture Selection (Hidden by default) -->
+                <div class="prefecture-selection" id="prefectureSelection" style="display: none;">
+                    <h3 class="prefecture-selection-title" id="prefectureSelectionTitle">県を選択</h3>
+                    <div class="prefecture-buttons" id="prefectureButtons">
+                        <!-- Prefecture buttons will be dynamically added here -->
+                    </div>
+                    <button class="back-btn" id="backBtn">← 地図に戻る</button>
+                </div>
+            </section>
+
+            <section class="search-section">
+                <div class="search-form">
+                    <!-- AI-style free input search -->
+                    <div class="ai-search-container">
+                        <div class="form-group ai-search-group">
+                            <label for="freeInput">自由入力検索</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="freeInput" class="form-control ai-input" placeholder="検索ワードを入力してください">
+                                <button id="aiSearchBtn" class="ai-search-btn">
+                                    🔍 検索する
+                                </button>
+                            </div>
+                            <p class="input-hint">検索ワードを入力して、AIが最適なデートスポットを提案します。</p>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="search-divider">
+                        <span>または絞り込み検索</span>
+                    </div>
+
+                    <!-- Traditional search -->
+                    <div class="traditional-search">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prefecture">都道府県</label>
+                                <select id="prefecture" class="form-control">
+                                    <option value="">選択してください</option>
+                                    <option value="北海道">北海道</option>
+                                    <option value="青森県">青森県</option>
+                                    <option value="岩手県">岩手県</option>
+                                    <option value="宮城県">宮城県</option>
+                                    <option value="秋田県">秋田県</option>
+                                    <option value="山形県">山形県</option>
+                                    <option value="福島県">福島県</option>
+                                    <option value="茨城県">茨城県</option>
+                                    <option value="栃木県">栃木県</option>
+                                    <option value="群馬県">群馬県</option>
+                                    <option value="埼玉県">埼玉県</option>
+                                    <option value="千葉県">千葉県</option>
+                                    <option value="東京都">東京都</option>
+                                    <option value="神奈川県">神奈川県</option>
+                                    <option value="新潟県">新潟県</option>
+                                    <option value="富山県">富山県</option>
+                                    <option value="石川県">石川県</option>
+                                    <option value="福井県">福井県</option>
+                                    <option value="山梨県">山梨県</option>
+                                    <option value="長野県">長野県</option>
+                                    <option value="岐阜県">岐阜県</option>
+                                    <option value="静岡県">静岡県</option>
+                                    <option value="愛知県">愛知県</option>
+                                    <option value="三重県">三重県</option>
+                                    <option value="滋賀県">滋賀県</option>
+                                    <option value="京都府">京都府</option>
+                                    <option value="大阪府">大阪府</option>
+                                    <option value="兵庫県">兵庫県</option>
+                                    <option value="奈良県">奈良県</option>
+                                    <option value="和歌山県">和歌山県</option>
+                                    <option value="鳥取県">鳥取県</option>
+                                    <option value="島根県">島根県</option>
+                                    <option value="岡山県">岡山県</option>
+                                    <option value="広島県">広島県</option>
+                                    <option value="山口県">山口県</option>
+                                    <option value="徳島県">徳島県</option>
+                                    <option value="香川県">香川県</option>
+                                    <option value="愛媛県">愛媛県</option>
+                                    <option value="高知県">高知県</option>
+                                    <option value="福岡県">福岡県</option>
+                                    <option value="佐賀県">佐賀県</option>
+                                    <option value="長崎県">長崎県</option>
+                                    <option value="熊本県">熊本県</option>
+                                    <option value="大分県">大分県</option>
+                                    <option value="宮崎県">宮崎県</option>
+                                    <option value="鹿児島県">鹿児島県</option>
+                                    <option value="沖縄県">沖縄県</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="genre">ジャンル</label>
+                                <select id="genre" class="form-control">
+                                    <option value="">選択してください</option>
+                                    <option value="レストラン">レストラン</option>
+                                    <option value="カフェ">カフェ</option>
+                                    <option value="エンターテイメント">エンターテイメント</option>
+                                    <option value="アウトドア">アウトドア</option>
+                                    <option value="ショッピング">ショッピング</option>
+                                    <option value="観光">観光</option>
+                                    <option value="ドライブ">ドライブ</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="budget">予算</label>
+                                <select id="budget" class="form-control">
+                                    <option value="">選択してください</option>
+                                    <option value="無料">無料</option>
+                                    <option value="有料">有料</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button id="searchBtn" class="search-btn">
+                            🔍 絞り込み検索
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="results-section">
+                <div id="loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>検索中...</p>
+                </div>
+
+                <div id="noResults" class="no-results hidden">
+                    <p>😔 条件に合うデートスポットが見つかりませんでした</p>
+                    <p>検索条件を変えてみてください</p>
+                </div>
+
+                <div id="results" class="results-grid">
+                    <!-- 検索結果がここに表示されます -->
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 全国デートスポット検索</p>
+        </footer>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
